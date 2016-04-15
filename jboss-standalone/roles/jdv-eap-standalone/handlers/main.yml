@@ -1,0 +1,6 @@
+---
+- name: restart jboss-dv 
+  service: name=jboss-dv state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted

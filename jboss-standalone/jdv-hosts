@@ -1,0 +1,2 @@
+[jboss-servers]
+54.87.250.70 ansible_ssh_user=ec2-user

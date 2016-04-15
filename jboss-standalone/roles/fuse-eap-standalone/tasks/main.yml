@@ -20,7 +20,7 @@
   copy: src=user_profile dest=/home/ec2-user/.profile owner=ec2-user mode=0644
 
 - name: Download JBoss from Red Hat
-  copy: src=/tmp/jboss-eap-6.4.0.zip dest=/opt/jboss-eap-6.4.0.zip
+  copy: src=/home/rstewart/Downloads/jboss-eap-6.4.0.zip dest=/opt/jboss-eap-6.4.0.zip
 
 - name: Extract archive
   command: chdir=/usr/share /usr/bin/unzip -q /opt/jboss-eap-6.4.0.zip creates=/usr/share/jboss-as
@@ -55,7 +55,7 @@
   copy: src=jboss-as-standalone.sh dest=/etc/init.d/jboss-as mode=0755
 
 - name: Download JBoss from Red Hat
-  copy: src=/tmp/fuse-eap-installer-6.2.1.redhat-084.jar dest=/opt/fuse-eap-installer-6.2.1.redhat-084.jar
+  copy: src=/home/rstewart/Downloads/fuse-eap-installer-6.2.1.redhat-084.jar dest=/opt/fuse-eap-installer-6.2.1.redhat-084.jar
 
 - name: Extract Fuse
   command: chdir=/usr/share/jboss-as java -jar /opt/fuse-eap-installer-6.2.1.redhat-084.jar

@@ -1,0 +1,84 @@
+---
+- name: Install Java 1.7 and some basic dependencies
+  yum: name={{item}} state=present
+  with_items:
+   - unzip
+   - java-1.7.0-openjdk-devel
+
+- name: Download Maven
+  get_url: url=http://mirror.sdunix.com/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip dest=/opt/apache-maven-3.3.9-bin.zip
+
+- name: Create Apache Maven dir
+  file: path=/usr/local/apache-maven state=directory mode=0755
+
+- name: Extract maven archive
+  command: chdir=/usr/local/apache-maven /usr/bin/unzip -q /opt/apache-maven-3.3.9-bin.zip creates=/usr/local/apache-maven/apache-maven-3.3.9
+
+- name: Create user's profile
+  copy: src=user_profile dest=/home/ec2-user/.profile owner=ec2-user mode=0644
+
+- name: Download JBoss Data Virtualization from Red Hat
+  copy: src=/home/rstewart/Downloads/jboss-dv-installer-6.2.0.redhat-3.jar dest=/opt/jboss-dv-installer-6.2.0.redhat-3.jar
+
+- name: Download JBoss EAP from Red Hat
+  copy: src=/home/rstewart/Downloads/jboss-eap-6.4.0.zip dest=/opt/jboss-eap-6.4.0.zip
+
+- name: Create JBoss EAP dir
+  file: path=/usr/share/jboss-dv state=directory mode=0755
+
+- name: Extract JBoss EAP archive
+  command: chdir=/usr/share/jboss-dv /usr/bin/unzip -q /opt/jboss-eap-6.4.0.zip creates=/usr/share/jboss-dv/jboss-eap-6.4
+
+- name: Copying standalone.xml configuration file
+  template: src=standalone.xml dest=/usr/share/jboss-dv/standalone/configuration/
+
+- name: Copying standalone.conf configuration file
+  template: src=standalone.conf dest=/usr/share/jboss-dv/bin/
+  notify: restart jboss-dv
+
+- name: Add group "jboss-dv"
+  group: name=jboss-dv
+
+- name: Add user "jboss-dv"
+  user: name=jboss-dv group=jboss-dv home=/usr/share/jboss-dv
+
+- name: Change ownership of JBoss installation
+  file: path=/etc/jboss-dv/ owner=jboss-dv group=jboss-dv state=directory recurse=yes
+
+- name: Change ownership of JBoss installation
+  file: path=/usr/share/jboss-dv/ owner=jboss-dv group=jboss-dv state=directory recurse=yes
+
+- name: Copy the conf script
+  copy: src=jboss-dv.conf dest=/etc/jboss-dv mode=0755
+
+- name: Copy the init script
+  copy: src=jboss-dv-standalone.sh dest=/etc/init.d/jboss-dv mode=0755
+
+- name: Copying maven settings.xml with Fuse repos to main maven conf
+  template: src=settings.xml dest=/usr/local/apache-maven/apache-maven-3.3.9/conf
+  notify: restart jboss
+
+- name: Create a directory to store your keystore and other encrypted information
+  file: path=/usr/share/jboss-dv/vault owner=jboss group=jboss state=directory recurse=yes
+  
+#- name: create the keystore for encryption/decryption needs
+#  command: chdir=/usr/share/jboss-dv/vault /usr/bin/keytool dfdsgdsgfd
+
+- name: adding application-roles.properties
+  copy: src=application-roles.properties dest=/usr/share/jboss-dv/standalone/configuration
+
+- name: adding application-users.properties
+  copy: src=application-users.properties dest=/usr/share/jboss-dv/standalone/configuration
+
+- name: adding mgmt-groups.properties
+  copy: src=mgmt-groups.properties dest=/usr/share/jboss-dv/standalone/configuration
+
+- name: adding mgmt-users.properties
+  copy: src=mgmt-users.properties dest=/usr/share/jboss-dv/standalone/configuration
+
+- name: Enable JBoss to be started at boot
+  service: name=jboss-dv enabled=yes state=started
+
+- name: deploy iptables rules
+  template: src=iptables-save dest=/etc/sysconfig/iptables
+  notify: restart iptables
