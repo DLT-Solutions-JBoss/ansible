@@ -1,0 +1,11 @@
+---
+# This playbook deploys a simple standalone JBoss server. 
+
+- hosts: jboss-servers 
+  remote_user: ec2-user
+  sudo: yes
+#  ansible_ssh_pass: fusetest
+#  ansible_ssh_user: ec2-user
+
+  roles:
+    - jboss-standalone
