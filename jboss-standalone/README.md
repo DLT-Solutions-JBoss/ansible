@@ -19,7 +19,7 @@ EAP server running on the ports you chose, on the target machines,
 and with the ability to deploy Fuse applications.
 
 This is a very simple playbook and is intended to use as a starter kit to 
-configure an application infrastructure for your needs. You can expand the 
+configure an application infrastructure for your needs. You can expand the (ansible/jboss-standalone/roles/fuse-eap-standalone/)
 tasks to deploy testing servers, their scripts, to compliment your CI/CD pipelines.
 
 ### Ideas for Improvement
