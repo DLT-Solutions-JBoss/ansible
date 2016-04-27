@@ -1,0 +1,9 @@
+# file: aws_provisioning
+
+[local]
+localhost
+
+[launched:vars]
+ansible_ssh_private_key_file=/home/rstewart/.ssh/DLT-EP
+
+[launched]

@@ -1,0 +1,44 @@
+---
+- name: Create a RHEL instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  become: false
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Launch instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: "{{ security_groups }}"
+         instance_type: "{{ type }}"
+         instance_tags:
+           Name: " {{ name }}"
+         image: "{{ image }}"
+         wait: true
+         region: "{{ region }}"
+         zone: "{{ zone }}"
+         vpc_subnet_id: "{{ vpc_subnet }}"
+         assign_public_ip: "{{ assign_public_ip }}"
+         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+         #termination_protection: no
+      register: ec2
+
+    - name: Add new instance to host group
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: launched
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for:
+        host: "{{ item.public_dns_name }}"
+        port: 22
+        delay: 60
+        timeout: 320
+        state: started
+      with_items: ec2.instances
+
+# - include: osconfig.yml

@@ -2,71 +2,131 @@
 - name: Install Java 1.7 and some basic dependencies
   yum: name={{item}} state=present
   with_items:
+   - unzip
    - java-1.7.0-openjdk-devel
 
-# - name: Download Maven
-#  unarchive: 
-#    src: http://mirror.sdunix.com/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-#    dest: /usr/local/apache-maven/apache-maven-3.3.9
-#    mode: 0755
+- name: Create Maven install dir
+  file:
+    path: /usr/local/apache-maven
+    state: directory
+    recurse: yes
 
-# - name: Create Apache Maven dir
-#  file: path=/usr/local/apache-maven state=directory mode=0755
+- name: Create Specific Maven version install dir
+  file:
+    path: /usr/local/apache-maven/apache-maven-3.3.9
+    state: directory
+    recurse: yes
 
-#- name: Extract maven archive
-#  command: chdir=/usr/local/apache-maven /usr/bin/unzip -q /opt/apache-maven-3.3.9-bin.zip creates=/usr/local/apache-maven/apache-maven-3.3.9
+- name: Extract Maven binaries
+  unarchive:
+#    src: http://apache.mirrors.tds.net/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    src: /home/rstewart/Downloads/apache-maven-3.3.9-bin.zip
+    dest: /usr/local/apache-maven/
+    copy: yes
+
+- name: Copying maven settings.xml with Fuse repos to main maven conf
+  template:
+    src: settings.xml
+    dest: /usr/local/apache-maven/apache-maven-3.3.9/conf
+  notify: restart jboss
 
 - name: Create user's profile
-  copy: src=user_profile dest=/home/ec2-user/.profile owner=ec2-user mode=0644
+  copy:
+    src: .profile
+    dest: /home/{{ ansible_ssh_user }}/
 
-- name: Download JBoss from Red Hat
-  copy: src=/tmp/jboss-eap-6.4.0.zip dest=/opt/jboss-eap-6.4.0.zip
+- name: Getting EAP from local server (instead of Red Hat where the above retrieves it and unarchives it)
+  copy:
+    src: /home/rstewart/Downloads/jboss-eap-6.4.0.zip
+    dest: /opt
 
-- name: Extract archive
-  command: chdir=/usr/share /usr/bin/unzip -q /opt/jboss-eap-6.4.0.zip creates=/usr/share/jboss-as
+- name: Extract EAP archive
+  unarchive:
+    src: /home/rstewart/Downloads/jboss-eap-6.4.0.zip
+    dest: /usr/share
+    copy: yes
 
 # Rename the dir to avoid encoding the version in the init script
 - name: Rename install directory
   command: chdir=/usr/share /bin/mv jboss-eap-6.4 jboss-as creates=/usr/share/jboss-as
 
 - name: Copying standalone.xml configuration file
-  template: src=standalone.xml dest=/usr/share/jboss-as/standalone/configuration/
+  template: 
+    src: standalone.xml
+    dest: /usr/share/jboss-as/standalone/configuration/
 
 - name: Copying standalone.conf configuration file
-  template: src=standalone.conf dest=/usr/share/jboss-as/bin/
+  template:
+    src: standalone.conf
+    dest: /usr/share/jboss-as/bin/
   notify: restart jboss
 
 - name: Add group "jboss"
-  group: name=jboss
+  group:
+    name: jboss
 
 - name: Add user "jboss"
-  user: name=jboss group=jboss home=/usr/share/jboss-as
+  user: 
+    name: jboss
+    group: jboss
+    home: /usr/share/jboss-as
+
+- name: Create JBoss EAP log dir
+  file:
+    path: /var/log/jboss-as
+    state: directory
+    recurse: yes
+
+- name: Create jboss user's profile
+  copy:
+    src: .profile
+    dest: /usr/share/
+    mode: 0644
 
 - name: Change ownership of JBoss installation
-  file: path=/etc/jboss-as/ owner=jboss group=jboss state=directory recurse=yes
+  file:
+    path: /etc/jboss-as/
+    owner: jboss
+    group: jboss
+    state: directory
+    recurse: yes
 
 - name: Change ownership of JBoss installation
-  file: path=/usr/share/jboss-as/ owner=jboss group=jboss state=directory recurse=yes
+  file:
+    path: /usr/share/jboss-as/
+    owner: jboss
+    group: jboss
+    state: directory
+    recurse: yes
 
-- name: Copy the conf script
-  copy: src=jboss-as.conf dest=/etc/jboss-as mode=0755
+- name: adding application-roles.properties
+  copy:
+    src: application-roles.properties
+    dest: /usr/share/jboss-as/standalone/configuration
 
-- name: Copy the init script
-  copy: src=jboss-as-standalone.sh dest=/etc/init.d/jboss-as mode=0755
+- name: adding application-users.properties
+  copy:
+    src: application-users.properties
+    dest: /usr/share/jboss-as/standalone/configuration
 
-- name: Download JBoss from Red Hat
-  copy: src=/tmp/fuse-eap-installer-6.2.1.redhat-084.jar dest=/opt/fuse-eap-installer-6.2.1.redhat-084.jar
+- name: adding mgmt-groups.properties
+  copy:
+    src: mgmt-groups.properties
+    dest: /usr/share/jboss-as/standalone/configuration
 
-- name: Extract Fuse
-  command: chdir=/usr/share/jboss-as java -jar /opt/fuse-eap-installer-6.2.1.redhat-084.jar
+- name: adding mgmt-users.properties
+  copy:
+    src: mgmt-users.properties
+    dest: /usr/share/jboss-as/standalone/configuration
 
-- name: Copying maven settings.xml with Fuse repos to main maven conf
-  template: src=settings.xml dest=/usr/local/apache-maven/apache-maven-3.3.9/conf
-  notify: restart jboss
+- name: Copy the service definition into the systemd dir
+  copy:
+    src: jboss-as.service
+    dest: /etc/systemd/system/
+
+- name: Reload system daemon
+  command: systemctl daemon-reload 
 
 - name: Enable JBoss to be started at boot
-  service: name=jboss enabled=yes state=started
+  command: systemctl enable jboss-as.service
 
-- name: deploy iptables rules
-  template: src=iptables-save dest=/etc/sysconfig/iptables
-  notify: restart iptables

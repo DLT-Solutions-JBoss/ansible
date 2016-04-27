@@ -1,3 +1,2 @@
 [jboss-servers]
-# 172.30.3.98 ansible_ssh_user=ec2-user
-54.209.159.142 ansible_ssh_user=ec2-user
+ec2-54-173-123-216.compute-1.amazonaws.com ansible_ssh_user=ec2-user

@@ -243,92 +243,13 @@ under the License.
         <tomcatPath>/path/to/tomcat/instance</tomcatPath>
       </properties>
     </profile>
-
-        <profile>
-            <id>fsw-online-repos</id>
-            <repositories>
-                <repository>
-                    <id>jboss-ga-repository</id>
-                    <url>http://maven.repository.redhat.com/techpreview/all/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-
-                <repository>
-                    <id>jboss-public-repository</id>
-                    <url>http://repository.jboss.org/nexus/content/repositories/public/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-
-                <repository>
-                    <id>jboss-fuse-public-repository</id>
-                    <url>http://repo.fusesource.com/nexus/content/groups/public/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-ga-plugin-repository</id>
-                    <url>http://maven.repository.redhat.com/techpreview/all/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-
-                <pluginRepository>
-                    <id>jboss-public-plugin-repository</id>
-                    <url>http://repository.jboss.org/nexus/content/repositories/public/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-
-                <pluginRepository>
-                    <id>jboss-fuse-public-plugin-repository</id>
-                    <url>http://repo.fusesource.com/nexus/content/groups/public/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-
-            </pluginRepositories>
-        </profile>
     -->
   </profiles>
-
-  <activeProfiles>
-    <activeProfile>fsw-online-repos</activeProfile>
-  </activeProfiles>
 
   <!-- activeProfiles
    | List of profiles that are active for all builds.
    |
   <activeProfiles>
-    <activeProfile>fsw-online-repos</activeProfile>
     <activeProfile>alwaysActiveProfile</activeProfile>
     <activeProfile>anotherAlwaysActiveProfile</activeProfile>
   </activeProfiles>

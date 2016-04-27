@@ -1,0 +1,15 @@
+[Unit]
+Description=JBoss EAP
+After=network.target
+
+[Service]
+Type=idle
+Environment=JBOSS_USER=jboss M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9 M2=$M2_HOME/bin PATH=$M2:$PATH JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk JBOSS_HOME=/usr/share/jboss-as EAP_HOME=/usr/share/jboss-as JAVA=/usr/lib/jvm/java-1.7.0-openjdk/bin/java JBOSS_LOG_DIR=/var/log/jboss-as "JAVA_OPTS=-Xms256m -Xmx256m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -Djboss.modules.policy-permissions=true"
+User=jboss
+Group=jboss
+ExecStart=/usr/share/jboss-as/bin/standalone.sh
+TimeoutStartSec=600
+TimeoutStopSec=600
+
+[Install]
+WantedBy=multi-user.target
