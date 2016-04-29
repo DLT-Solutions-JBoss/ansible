@@ -1,0 +1,12 @@
+---
+- name: copying war to remote
+  copy:
+    src: /home/rstewart/.m2/repository/metarapp/metarapp/1.0/metarapp-1.0.war
+    dest: /tmp/metarapp-1.0.war
+
+- name: Deploy a test war to the EAP server
+  jboss:
+    src: /tmp/metarapp-1.0.war
+    deployment: weather.war
+    deploy_path: /usr/share/jboss-as/standalone/deployments
+    state: present

@@ -1,2 +1,2 @@
 [jboss-servers]
-54.209.137.121 ansible_ssh_user=ec2-user
+54.208.83.9 ansible_ssh_user=ec2-user

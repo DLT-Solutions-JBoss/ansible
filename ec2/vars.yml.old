@@ -1,0 +1,12 @@
+---
+image: ami-2051294a
+image_name: 'Red Hat Enterprise Linux 7.2'
+region: us-east-1
+zone: us-east-1e
+keypair: DLT-EP
+type: t2.small
+security_groups: [ 'launch-wizard-5', 'default' ]
+vpc_subnet: subnet-5282c268
+assign_public_ip: yes
+tags: [ '{"Name":"FuseOnEA"}']
+name: FuseOnEAP

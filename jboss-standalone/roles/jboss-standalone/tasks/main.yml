@@ -77,6 +77,22 @@
     state: directory
     recurse: yes
 
+- name: Create JBoss EAP MySql module dir
+  file:
+    path: /usr/share/jboss-as/modules/com/mysql/main
+    state: directory
+    recurse: yes
+
+- name: Create MySql module
+  template:
+    src: module.xml
+    dest: /usr/share/jboss-as/modules/com/mysql/main
+
+- name: Copy MySql JDBC Driver
+  copy:
+    src: mysql-connector-java-5.1.38-bin.jar
+    dest: /usr/share/jboss-as/modules/com/mysql/main
+
 - name: Create jboss user's profile
   copy:
     src: .profile
