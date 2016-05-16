@@ -1,7 +1,7 @@
 ---
 # This playbook deploys a basic Fuse on EAP standalone JBoss server. 
 
-- hosts: jboss-servers 
+- hosts: launched
   remote_user: ec2-user
   sudo: yes
 

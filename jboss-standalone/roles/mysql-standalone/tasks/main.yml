@@ -1,0 +1,43 @@
+---
+- name: Install MySQL
+  yum:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - mariadb-server
+    - MySQL-python
+  when: mariadb_server
+
+- include: configure.yml
+- include: logging.yml
+
+- name: Set up MariaDB dirs
+  shell: /usr/bin/mysql_install_db --datadir=/var/lib/mysql --user=mysql
+
+- name: Start MariaDB service
+  service:
+    name: mariadb
+    state: started
+
+- name: Pause for MariaDB to become ready
+  wait_for:
+    port: 3306
+    delay: 2
+
+- name: Create Database User
+  mysql_user:
+    state: present
+    name: "{{ database_username }}"
+    password: "{{ database_password }}"
+    host: "{{ item[0] }}"
+    priv: "{{ item[1] }}.*:ALL"
+    check_implicit_admin: yes
+  with_nested:
+    - [ '%', 'localhost' ]
+    - [ 'mysql' , '{{ database_name }}']
+
+- name: Create Database
+  mysql_db:
+    state: present
+    name: "{{ database_name }}"
+

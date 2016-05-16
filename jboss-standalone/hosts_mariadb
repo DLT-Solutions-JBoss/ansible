@@ -1,0 +1,2 @@
+[mariadb_servers]
+ec2-54-174-245-229.compute-1.amazonaws.com ansible_ssh_user=ec2-user

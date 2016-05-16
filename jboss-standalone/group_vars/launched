@@ -2,8 +2,8 @@
 
 http_port: 8080
 https_port: 8443
-mysql_db_host: ec2-54-210-51-43.compute-1.amazonaws.com
+mysql_db_host: ec2-54-174-245-229.compute-1.amazonaws.com
 mysql_db_port: 3306
 mysql_db_database: metarapp
 mysql_db_username: metarapp
-mysql_db_password: M3tarapp!
+mysql_db_password: M3tarapp1!

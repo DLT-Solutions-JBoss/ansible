@@ -1,0 +1,4 @@
+---
+- include: ../ec2/launch.yml
+- include: eap-only-site.yml
+- include: eap-deploy-app-site.yml

@@ -5,7 +5,7 @@
   gather_facts: False
   become: false
   vars_files:
-    - vars.yml
+    - /home/rstewart/git/ansible/ec2/vars.yml
 
   tasks:
     - name: Launch instance

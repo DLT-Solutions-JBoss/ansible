@@ -5,8 +5,8 @@ region: us-east-1
 zone: us-east-1e
 keypair: dlt-demo-jboss-eap-app
 type: t2.small
-security_groups: [ 'jboss-eap-app', 'default' ]
+security_groups: [ 'mysql-demo', 'default' ]
 vpc_subnet: subnet-7203574f
 assign_public_ip: yes
-tags: [ '{"Name":"EAP MetarApp", "Company":"DLT"}']
-name: JBossMetarapp
+tags: [ '{"Name":"MySQL Demo", "Company":"DLT"}']
+name: "MySQL Demo"

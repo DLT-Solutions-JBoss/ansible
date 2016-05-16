@@ -1,0 +1,12 @@
+export M2_HOME=/usr/local/apache-maven/apache-maven-3.3.9
+export M2=$M2_HOME/bin
+export PATH=$M2:$PATH
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk
+export PATH=$PATH:$JAVA_HOME/bin
+export JBOSS_HOME=/usr/share/jboss-as
+export EAP_HOME=/usr/share/jboss-as
+export MYSQL_DB_HOST=metarapp.ce6ggddtquaf.us-east-1.rds.amazonaws.com
+export MYSQL_DB_PORT=3306
+export APP_NAME=metarapp
+export MYSQL_DB_USERNAME=metarapp
+export MYSQL_DB_PASSWORD=metarapp
